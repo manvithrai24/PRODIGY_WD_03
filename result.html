@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Results</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div id="resultPage">
+            <h2 id="winnerAnnouncement"></h2>
+            <div id="leaderboard">
+                <h2>Leaderboard</h2>
+                <ul id="leaderboardList"></ul>
+                <button id="clearLeaderboardButton">Clear Leaderboard</button>
+            </div>
+            <button id="homeButton">Go Home</button>
+            <button id="replayButton">Replay</button>
+        </div>
+    </div>
+
+    <script>
+        const winner = localStorage.getItem('winner');
+        const winnerAnnouncement = document.getElementById('winnerAnnouncement');
+        
+        // Display winner or draw message
+        winnerAnnouncement.textContent = winner === 'Draw' ? 'It\'s a Draw!' : `Winner: ${winner === 'X' ? localStorage.getItem('player1') : localStorage.getItem('player2')}`;
+
+        // Get leaderboard from localStorage or initialize it
+        const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+        
+        if (winner !== 'Draw') {
+            // Push winner's name to the leaderboard
+            const winningPlayer = winner === 'X' ? localStorage.getItem('player1') : localStorage.getItem('player2');
+            leaderboard.push(winningPlayer);
+        }
+        
+        // Store updated leaderboard in localStorage
+        localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+
+        // Display leaderboard
+        const leaderboardList = document.getElementById('leaderboardList');
+        leaderboard.forEach(player => {
+            const li = document.createElement('li');
+            li.textContent = player;
+            leaderboardList.appendChild(li);
+        });
+
+        // Clear leaderboard button functionality
+        document.getElementById('clearLeaderboardButton').addEventListener('click', () => {
+            localStorage.removeItem('leaderboard');
+            leaderboardList.innerHTML = ''; // Clear the leaderboard UI
+        });
+
+        // Navigate to Home or Replay
+        document.getElementById('homeButton').addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+
+        document.getElementById('replayButton').addEventListener('click', () => {
+            window.location.href = 'game.html';
+        });
+    </script>
+</body>
+</html>
